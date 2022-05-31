@@ -3,13 +3,8 @@
 const bcrypt = require('bcrypt-nodejs')
 const jwt = require('../services/jwt.service')
 const neo4j = require('neo4j-driver')
-const {JWT_SECRET} = require("../constants");
+const {NEO4J_URI, NEO4J_USERNAME, NEO4J_PASSWORD} = require("../constants");
 const {toNativeTypes} = require("../utils");
-const {
-    NEO4J_URI,
-    NEO4J_USERNAME,
-    NEO4J_PASSWORD
-} = process.env
 const driver = neo4j.driver(NEO4J_URI, neo4j.auth.basic(NEO4J_USERNAME, NEO4J_PASSWORD))
 
 async function signUp (req, res) {

@@ -5,6 +5,7 @@ const bodyParser = require('body-parser')
 const cors = require('cors');
 const dotenv = require('dotenv')
 const neo4j = require('./neo4j')
+const constants = require('./constants')
 
 dotenv.config()
 
@@ -21,13 +22,7 @@ app.use(cors())
 app.use(bodyParser.urlencoded({extended: false}))
 app.use(bodyParser.json())
 
-const {
-    NEO4J_URI,
-    NEO4J_USERNAME,
-    NEO4J_PASSWORD,
-} = process.env
-
-neo4j.initDriver(NEO4J_URI, NEO4J_USERNAME, NEO4J_PASSWORD)
+neo4j.initDriver(constants.NEO4J_URI, constants.NEO4J_USERNAME, constants.NEO4J_PASSWORD)
 
 app.use('/api/account', accountRoutes)
 app.use('/api/auth', authRoutes)
