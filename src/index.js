@@ -1,7 +1,6 @@
 'use strict'
 
 const app = require('./app')
-const consts = require('./constants')
 
 app.set('port', (process.env.PORT || 5000));
 
