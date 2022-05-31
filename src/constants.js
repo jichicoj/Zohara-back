@@ -1,6 +1,6 @@
 'use strict'
 
-const APP_PORT = 5000
+const APP_PORT = process.env.port || 5000
 const JWT_SECRET = 'super_secret_password'
 const SALT_ROUNDS =  10
 
