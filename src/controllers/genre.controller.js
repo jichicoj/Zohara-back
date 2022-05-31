@@ -20,13 +20,14 @@ async function findAll (req, res) {
                 MATCH (g)<-[:IN_GENRE]-(m:Movie)
                 WHERE m.imdbRating IS NOT NULL
                 AND m.poster IS NOT NULL
-                RETURN m.poster AS poster
-                ORDER BY m.imdbRating DESC LIMIT 1
+                RETURN m {
+                    .*
+                } AS movie
+                ORDER BY m.imdbRating DESC LIMIT 10
               }
               RETURN g {
                 .*,
-                movies: size((g)<-[:IN_GENRE]-()),
-                poster: poster
+                movies: movie
               } as genre
               ORDER BY g.name ASC
         `))

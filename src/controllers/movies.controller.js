@@ -21,13 +21,23 @@ async function getAll (req, res) {
                     .*,
                     favorite: m.tmdbId IN $favorites
                 } AS movie
-                ORDER BY m.year DESC
+                ORDER BY m.title, m.imdbRating DESC LIMIT 1
               `, { favorites })
         })
 
-        const movies = result.records.map(row => utils.toNativeTypes(row.get('movie')))
+        const result2 = await session.readTransaction(tx =>
+            tx.run(`MATCH (u: User {userId: $userId})-[r: HAS_FAVORITE]->(m: Movie)
+                RETURN m {
+                    .*,
+                    favorite: true
+                } AS movie
+                ORDER BY m.title
+            `, { userId })
+        )
 
-        return res.status(200).send(movies)
+        const favorites = result2.records.map(row => toNativeTypes(row.get('movie')))
+
+        return res.status(200).send({movie: toNativeTypes(result.records[0].get('movie')), favorites: favorites})
     } catch (e) {
         console.log(e)
         return res.status(500).send({ message: e.message })
@@ -147,15 +157,16 @@ async function getByGenre(req, res) {
             const favorites = await isFavorite(tx, userId)
 
             return tx.run(`
-          MATCH (m:Movie)-[:IN_GENRE]->(:Genre {name: $genre})
-          WHERE m.\`${sort}\` IS NOT NULL
-          RETURN m {
-            .*,
-            favorite: m.tmdbId IN $favorites
-          } AS movie
-          ORDER BY m.\`${sort}\` ${order}
-        `, { favorites, genre })
-        })
+              MATCH (m:Movie)-[:IN_GENRE]->(:Genre {name: $genre})
+              WHERE m.\`${sort}\` IS NOT NULL
+              RETURN m {
+                .*,
+                favorite: m.tmdbId IN $favorites
+              } AS movie
+              ORDER BY m.\`${sort}\` ${order}
+              LIMIT 15
+            `, { favorites, genre })
+            })
 
         const movies = result.records.map(row => toNativeTypes(row.get('movie')))
 
