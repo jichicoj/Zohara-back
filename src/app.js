@@ -31,6 +31,10 @@ app.use('/api/movie', movieRoutes)
 app.use('/api/people', peopleRoutes)
 app.use('/api/status', statusRoutes)
 
+app.get('/', (req, res) => {
+    res.send('Hello world')
+})
+
 app.use(errorMiddleware.errorMiddleware)
 
 module.exports = app
