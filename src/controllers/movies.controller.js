@@ -93,7 +93,7 @@ async function findByName(req, res) {
             return tx.run(`
               MATCH (p:Person)
               WHERE toLower(p.name) contains toLower($name)
-              RETURN p { .* } AS person LIMIT 10
+              RETURN p { .* } AS person ORDER BY p.born DESC LIMIT 10
             `, { name })
         })
 
