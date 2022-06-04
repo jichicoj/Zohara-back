@@ -24,7 +24,7 @@ async function getPeople(req, res) {
 
         const person = result.records[0].get('person')
 
-        return res.status(200).send({ person: person })
+        return res.status(200).send(toNativeTypes(person))
     } catch (e) {
         return res.status(500).send({ message: e.message })
     } finally {
