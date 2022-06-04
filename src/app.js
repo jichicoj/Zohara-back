@@ -14,8 +14,6 @@ const authRoutes = require('./routes/auth.routes')
 const genresRoutes = require('./routes/genres.routes')
 const movieRoutes = require('./routes/movie.routes')
 const peopleRoutes = require('./routes/people.routes')
-const statusRoutes = require('./routes/status.routes')
-const errorMiddleware = require('./middlewares/error.middleware');
 
 const app = express()
 app.use(cors())
@@ -29,12 +27,9 @@ app.use('/api/auth', authRoutes)
 app.use('/api/genres', genresRoutes)
 app.use('/api/movie', movieRoutes)
 app.use('/api/people', peopleRoutes)
-app.use('/api/status', statusRoutes)
 
 app.get('/', (req, res) => {
     res.send('Hello world')
 })
-
-app.use(errorMiddleware.errorMiddleware)
 
 module.exports = app
